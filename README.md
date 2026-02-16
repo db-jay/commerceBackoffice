@@ -103,8 +103,17 @@
 ![전체 데이터 플로우](docs/images/dataflow-overview.png)
 
 ### 핵심 시퀀스
+1. 주문 생성 시퀀스
 ![주문 생성 시퀀스](docs/images/sequence-order-create.png)
+
+<br/>
+
+2. 클레임 처리 시퀀스
 ![클레임 처리 시퀀스](docs/images/sequence-claim-process.png)
+ 
+<br/>
+
+3. 정산 배치 시퀀스
 ![정산 배치 시퀀스](docs/images/sequence-settlement-batch.png)
 
 
