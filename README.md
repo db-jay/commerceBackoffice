@@ -53,6 +53,8 @@
 
 ### 컨텍스트 맵
 ![컨텍스트 맵](docs/images/architecture-context-map.png)
+> 도메인별 컨텍스트 자세히 보기 [[Link →](https://sinae.notion.site/commerceBackoffice-3096323ef3398082aa62ff440486ec38)]
+
 
 ### Bounded Context
 | Context | Domain Type | 핵심 책임 | 대표 Aggregate | 소유 데이터 |
