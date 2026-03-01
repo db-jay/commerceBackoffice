@@ -1,0 +1,12 @@
+.DS_Store
+.omx/
+
+# Gradle
+.gradle/
+build/
+**/build/
+
+# IntelliJ
+.idea/
+*.iml
+

@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: commerce-backoffice-backend
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
