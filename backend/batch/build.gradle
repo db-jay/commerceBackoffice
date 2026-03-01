@@ -1,0 +1,9 @@
+/*
+ * 배치 모듈.
+ * - 정산 배치(Spring Batch) 관련 코드가 위치할 예정
+ * - 현재는 멀티모듈 골격만 생성
+ */
+plugins {
+    id 'java-library'
+}
+

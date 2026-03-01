@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: commerce-backoffice-backend
+  datasource:
+    # 로컬 기본값. 운영/개발 환경에서는 환경변수로 교체 가능.
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DB_USERNAME:sinae}
+    password: ${DB_PASSWORD:}
+  flyway:
+    enabled: true
+    # 기본 경로: classpath:db/migration
+    baseline-on-migrate: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

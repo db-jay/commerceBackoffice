@@ -10,3 +10,9 @@ build/
 .idea/
 *.iml
 
+# Local orchestration / learning artifacts (do not publish)
+AGENTS.md
+agent.md
+agent_creation_guide.md
+docs/issues/
+docs/learning/

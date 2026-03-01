@@ -1,0 +1,8 @@
+/*
+ * Member 컨텍스트 모듈.
+ * - 회원/등급/상태 도메인 코드가 위치할 예정
+ */
+plugins {
+    id 'java-library'
+}
+
