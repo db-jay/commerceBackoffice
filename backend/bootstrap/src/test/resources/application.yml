@@ -1,0 +1,8 @@
+spring:
+  autoconfigure:
+    # 현재 테스트는 웹 계층/예외 흐름 검증이 목적이므로
+    # DB/Flyway 자동설정을 비활성화해 테스트를 가볍고 안정적으로 유지한다.
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+

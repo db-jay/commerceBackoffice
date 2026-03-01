@@ -1,0 +1,33 @@
+/*
+ * 실행 애플리케이션 모듈.
+ * - Spring Boot 실행 클래스(BackofficeApplication)가 위치
+ * - 실제 HTTP API/필터/인터셉터/예외 처리 코드가 포함됨
+ */
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+dependencies {
+    // 내부 모듈 의존성
+    implementation project(':common')
+    implementation project(':security')
+    implementation project(':batch')
+    implementation project(':contexts:catalog')
+    implementation project(':contexts:member')
+    implementation project(':contexts:order')
+
+    // 웹/검증/헬스체크
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.flywaydb:flyway-core'
+
+    // DB 드라이버
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // 테스트
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
