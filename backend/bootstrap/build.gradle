@@ -29,5 +29,10 @@ dependencies {
 
     // 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // Testcontainers: 실제 PostgreSQL 컨테이너를 띄워 통합 테스트를 검증한다.
+    // - junit-jupiter: JUnit5 연동
+    // - postgresql: PostgreSQL 컨테이너 제공
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.4'
+    testImplementation 'org.testcontainers:postgresql:1.20.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
