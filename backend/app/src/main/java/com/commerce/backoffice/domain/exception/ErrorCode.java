@@ -7,6 +7,8 @@ package com.commerce.backoffice.domain.exception;
  */
 public enum ErrorCode {
     DEMO_BUSINESS_ERROR("DEMO_BUSINESS_ERROR", "비즈니스 규칙 위반입니다."),
+    PRODUCT_NOT_FOUND("PRODUCT_NOT_FOUND", "상품을 찾을 수 없습니다."),
+    INSUFFICIENT_STOCK("INSUFFICIENT_STOCK", "재고가 부족합니다."),
     VALIDATION_ERROR("VALIDATION_ERROR", "요청 값이 유효하지 않습니다."),
     INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "서버 내부 오류가 발생했습니다.");
 
