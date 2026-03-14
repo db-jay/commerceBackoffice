@@ -13,9 +13,6 @@ dependencies {
     implementation project(':common')
     implementation project(':security')
     implementation project(':batch')
-    implementation project(':contexts:catalog')
-    implementation project(':contexts:member')
-    implementation project(':contexts:order')
 
     // 웹/검증/헬스체크
     implementation 'org.springframework.boot:spring-boot-starter-web'

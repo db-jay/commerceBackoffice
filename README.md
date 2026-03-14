@@ -38,13 +38,21 @@
 - 스타일: DDD 기반 모듈형 모놀리스
 
 ### 레이어 구성
-- interfaces (Inbound Adapter): Controller, Request/Response DTO, Validation
+- presentation (Inbound Adapter): Controller, Request/Response DTO, Validation
 - application (Use Case): 유스케이스, 트랜잭션 경계, 인가 체크, Port 인터페이스
 - domain (Core): Entity, Value Object, Domain Service, Domain Event
 - infrastructure (Outbound Adapter): JPA/Redis/외부 API/메시징 구현체
 
+### 현재 구현 스냅샷 (2026-03-09)
+- `backend/app`: `presentation + application + domain + infrastructure` 레이어를 단일 모듈에서 운영
+- `backend/common`: 공통 예외(`BusinessException`, `ErrorCode`) + 공통 응답(`BaseResponse`, `ResponseMapper`) 공유
+
+> 리팩토링 방향: 레이어 경계를 단순화해서 입문자가 `presentation -> application -> domain -> infrastructure` 흐름을 바로 읽을 수 있게 유지한다.
+
+> 매퍼 규칙 문서: `docs/PRESENTATION_MAPPER_CONVENTION.md`
+
 ### 의존성 규칙(DIP)
-- interfaces -> application -> domain
+- presentation -> application -> domain
 - infrastructure -> application/domain의 Port 구현
 - domain은 Spring, JPA, AWS SDK 등 프레임워크/인프라에 의존하지 않는다.
 

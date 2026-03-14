@@ -1,8 +1,0 @@
-/*
- * Catalog 컨텍스트 모듈.
- * - 상품/재고 도메인 코드가 위치할 예정
- */
-plugins {
-    id 'java-library'
-}
-

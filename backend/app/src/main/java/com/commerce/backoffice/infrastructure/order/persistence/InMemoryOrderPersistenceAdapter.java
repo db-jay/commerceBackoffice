@@ -1,0 +1,35 @@
+package com.commerce.backoffice.infrastructure.order.persistence;
+
+import com.commerce.backoffice.application.order.port.out.OrderPersistencePort;
+import com.commerce.backoffice.domain.order.Order;
+import com.commerce.backoffice.domain.order.OrderLine;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Component;
+
+/*
+ * DB 미사용 환경 대비용 In-Memory 주문 어댑터.
+ */
+@Component
+public class InMemoryOrderPersistenceAdapter implements OrderPersistencePort {
+
+    private final AtomicLong sequence = new AtomicLong(1L);
+    private final Map<Long, Order> orders = new ConcurrentHashMap<>();
+
+    @Override
+    public Order save(Long memberId, List<OrderLine> orderLines) {
+        long id = sequence.getAndIncrement();
+        Order order = Order.create(id, memberId, orderLines);
+        orders.put(id, order);
+        return order;
+    }
+
+    @Override
+    public Optional<Order> findById(long orderId) {
+        return Optional.ofNullable(orders.get(orderId));
+    }
+}
+
