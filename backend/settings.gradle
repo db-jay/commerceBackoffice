@@ -1,19 +1,15 @@
 rootProject.name = 'commerce-backoffice-backend'
 
 /*
- * 1주차 멀티모듈 구조.
+ * 멀티모듈 구조.
  * - app: 실행 애플리케이션 진입점
  * - common: 공통 정책/유틸
  * - security: 인증/인가 모듈
  * - batch: 배치/정산 실행 모듈
- * - contexts:*: 도메인 컨텍스트 모듈
  */
 include(
     'app',
     'common',
     'security',
-    'batch',
-    'contexts:catalog',
-    'contexts:member',
-    'contexts:order'
+    'batch'
 )
