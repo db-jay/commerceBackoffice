@@ -16,3 +16,16 @@ management:
     web:
       exposure:
         include: health
+
+backoffice:
+  security:
+    jwt:
+      # 학습용 기본 키. 운영에서는 반드시 환경변수로 교체해야 한다.
+      secret: ${JWT_SECRET:backoffice-learning-secret-key-change-me-please-2026}
+      access-token-expiry-seconds: ${JWT_ACCESS_EXPIRY_SECONDS:1800}
+      refresh-token-expiry-seconds: ${JWT_REFRESH_EXPIRY_SECONDS:1209600}
+    admin:
+      username: ${BACKOFFICE_ADMIN_USERNAME:admin}
+      password: ${BACKOFFICE_ADMIN_PASSWORD:admin1234}
+      role: ${BACKOFFICE_ADMIN_ROLE:ADMIN}
+

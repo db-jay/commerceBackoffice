@@ -46,6 +46,7 @@
 ### 현재 구현 스냅샷 (2026-03-09)
 - `backend/app`: `presentation + application + domain + infrastructure` 레이어를 단일 모듈에서 운영
 - `backend/common`: 공통 예외(`BusinessException`, `ErrorCode`) + 공통 응답(`BaseResponse`, `ResponseMapper`) 공유
+- 보안: JWT 로그인/재발급 API + Security Filter 기반 인증 + 역할 기반 인가(401/403 분리) 적용
 
 > 리팩토링 방향: 레이어 경계를 단순화해서 입문자가 `presentation -> application -> domain -> infrastructure` 흐름을 바로 읽을 수 있게 유지한다.
 
@@ -152,6 +153,8 @@
 - 상품/회원 API 구현 (CRUD + 기본 검증)
 - 주문 생성 API 구현 (주문 상태 모델 포함)
 - JWT 로그인/재발급(Access/Refresh) API 구현
+  - 범위: stateless 재발급(서명/만료/주체 검증)
+  - 후속 보안 강화로 분리: Refresh 저장소, rotation, 로그아웃 무효화, 재사용 감지
 - 단위/통합 테스트 템플릿 구축
 
 ### 3주차
@@ -193,6 +196,7 @@
 
 ### 3주차
 - 보안 강화(입력 검증, 민감정보 마스킹, 권한 세분화)
+  - 포함 후보: Refresh Token 저장소(Redis), rotation, 로그아웃 무효화, 재사용 감지
 - 장애 대응(재시도/타임아웃/예외 정책) 정리
 
 ### 4주차
