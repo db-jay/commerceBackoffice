@@ -87,7 +87,10 @@ public class CatalogProductApplicationService implements CatalogProductUseCase {
             throw new BusinessException(ErrorCode.INSUFFICIENT_STOCK);
         }
 
-        catalogProductPersistencePort.updateStockQuantity(product.id(), product.stockQuantity());
+        boolean updated = catalogProductPersistencePort.updateStock(product);
+        if (!updated) {
+            throw new BusinessException(ErrorCode.PRODUCT_STOCK_CONFLICT);
+        }
         return product;
     }
 }

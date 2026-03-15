@@ -27,14 +27,15 @@ public class InMemoryCatalogProductPersistenceAdapter implements CatalogProductP
     @Override
     public Product save(String name, BigDecimal price, int stockQuantity) {
         long id = sequence.getAndIncrement();
-        Product product = new Product(id, name, price, stockQuantity, ProductStatus.ACTIVE);
+        Product product = new Product(id, name, price, stockQuantity, ProductStatus.ACTIVE, 0L);
         products.put(id, product);
-        return product;
+        return copy(product);
     }
 
     @Override
     public Optional<Product> findById(long productId) {
-        return Optional.ofNullable(products.get(productId));
+        return Optional.ofNullable(products.get(productId))
+            .map(this::copy);
     }
 
     @Override
@@ -49,7 +50,8 @@ public class InMemoryCatalogProductPersistenceAdapter implements CatalogProductP
             name,
             price,
             current.stockQuantity(),
-            current.status()
+            current.status(),
+            current.version()
         );
         products.put(productId, replaced);
     }
@@ -66,25 +68,42 @@ public class InMemoryCatalogProductPersistenceAdapter implements CatalogProductP
             current.name(),
             current.price(),
             current.stockQuantity(),
-            status
+            status,
+            current.version()
         );
         products.put(productId, replaced);
     }
 
     @Override
-    public void updateStockQuantity(long productId, int stockQuantity) {
-        Product current = products.get(productId);
+    public boolean updateStock(Product product) {
+        Product current = products.get(product.id());
         if (current == null) {
-            return;
+            return false;
+        }
+        if (current.version() != product.version()) {
+            return false;
         }
 
         Product replaced = new Product(
             current.id(),
             current.name(),
             current.price(),
-            stockQuantity,
-            current.status()
+            product.stockQuantity(),
+            current.status(),
+            current.version() + 1
         );
-        products.put(productId, replaced);
+        products.put(product.id(), replaced);
+        return true;
+    }
+
+    private Product copy(Product product) {
+        return new Product(
+            product.id(),
+            product.name(),
+            product.price(),
+            product.stockQuantity(),
+            product.status(),
+            product.version()
+        );
     }
 }
