@@ -84,8 +84,10 @@
 - 실행 체크: `docs/WEEKLY_CHECKLIST.md`
 - 학습 로드맵: `docs/JUNIOR_LEARNING_PATH.md`
 - 프레젠테이션 매퍼 규칙: `docs/PRESENTATION_MAPPER_CONVENTION.md`
+- 테스트 템플릿 가이드: `docs/TEST_TEMPLATE_GUIDE.md`
 - 주차별 학습 포인트: `docs/learning/week*/`
 
 ## 7. 변경 이력
 - v2.0 (2026-03-01): 주니어 학습 중심으로 재구성, 1포인트 1문서 원칙 반영
 - v2.1 (2026-03-14): Presentation Mapper 위치/네이밍/책임 규칙 문서 링크 추가
+- v2.2 (2026-03-15): 계층별 테스트 템플릿/fixture 가이드 링크 추가

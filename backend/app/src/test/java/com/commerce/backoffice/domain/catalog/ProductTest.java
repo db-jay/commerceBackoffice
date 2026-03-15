@@ -2,14 +2,14 @@ package com.commerce.backoffice.domain.catalog;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import java.math.BigDecimal;
+import com.commerce.backoffice.support.fixture.TestFixtureFactory;
 import org.junit.jupiter.api.Test;
 
 class ProductTest {
 
     @Test
     void reserveStock_shouldDecreaseStock() {
-        Product product = new Product(1L, "apple", BigDecimal.valueOf(1000), 10, ProductStatus.ACTIVE);
+        Product product = TestFixtureFactory.product(1L, "apple", 1000, 10);
 
         product.reserveStock(3);
 
@@ -18,7 +18,7 @@ class ProductTest {
 
     @Test
     void reserveStock_shouldThrowWhenStockIsInsufficient() {
-        Product product = new Product(1L, "apple", BigDecimal.valueOf(1000), 1, ProductStatus.ACTIVE);
+        Product product = TestFixtureFactory.product(1L, "apple", 1000, 1);
 
         assertThrows(IllegalStateException.class, () -> product.reserveStock(2));
     }

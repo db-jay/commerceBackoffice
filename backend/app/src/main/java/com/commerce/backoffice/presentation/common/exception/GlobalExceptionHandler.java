@@ -2,6 +2,7 @@ package com.commerce.backoffice.presentation.common.exception;
 
 import com.commerce.backoffice.domain.exception.BusinessException;
 import com.commerce.backoffice.domain.exception.ErrorCode;
+import com.commerce.backoffice.domain.exception.UnauthorizedException;
 import com.commerce.backoffice.presentation.common.response.BaseResponse;
 import com.commerce.backoffice.presentation.common.response.ResponseMapper;
 import jakarta.validation.ConstraintViolationException;
@@ -37,6 +38,13 @@ public class GlobalExceptionHandler {
         // 요청 값 검증 실패 예외
         String message = validationMessage(ex);
         return responseMapper.error(HttpStatus.BAD_REQUEST, ErrorCode.VALIDATION_ERROR.code(), message);
+    }
+
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<BaseResponse<Object>> handleUnauthorizedException(UnauthorizedException ex) {
+        // 로그인 실패/토큰 검증 실패 등 인증 관련 예외
+        return responseMapper.error(HttpStatus.UNAUTHORIZED, ex.code(), ex.errorMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
