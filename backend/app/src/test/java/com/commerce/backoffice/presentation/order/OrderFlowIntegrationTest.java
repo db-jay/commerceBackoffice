@@ -70,6 +70,16 @@ class OrderFlowIntegrationTest extends ApiIntegrationTestTemplate {
             "id"
         );
 
+        mockMvc.perform(get("/api/catalog/products/{productId}", productId1)
+                .header("Authorization", bearerToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.stockQuantity").value(48));
+
+        mockMvc.perform(get("/api/catalog/products/{productId}", productId2)
+                .header("Authorization", bearerToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.stockQuantity").value(49));
+
         mockMvc.perform(get("/api/orders/{orderId}", orderId)
                 .header("Authorization", bearerToken))
             .andExpect(status().isOk())
@@ -85,6 +95,27 @@ class OrderFlowIntegrationTest extends ApiIntegrationTestTemplate {
                 .header("Authorization", bearerToken()))
             .andExpect(status().isConflict())
             .andExpect(jsonPath("$.code").value("ORDER_NOT_FOUND"));
+    }
+
+    @Test
+    void create_shouldReturnConflictWhenStockIsInsufficient() throws Exception {
+        String bearerToken = bearerToken();
+        Long memberId = createMemberAndGetId("low-stock-member@test.com", "low-stock-member");
+        Long productId = createProductAndGetId("limited-orange", 1500, 1);
+
+        mockMvc.perform(post("/api/orders")
+                .header("Authorization", bearerToken)
+                .contentType(APPLICATION_JSON)
+                .content("""
+                    {
+                      "memberId": %d,
+                      "orderLines": [
+                        {"productId": %d, "quantity": 2, "unitPrice": 1500}
+                      ]
+                    }
+                    """.formatted(memberId, productId)))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.code").value("INSUFFICIENT_STOCK"));
     }
 
     private Long createMemberAndGetId(String email, String name) throws Exception {

@@ -4,19 +4,37 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /*
- * Catalog 컨텍스트의 상품 애그리거트 초안.
- * - 가격, 재고, 상태를 한 객체에서 일관되게 관리한다.
- * - Spring/JPA 의존 없이 순수 비즈니스 규칙만 담는다.
+ * [역할]
+ * - 상품의 기본 정보(이름/가격), 재고 수량, 상태를 함께 관리하는 도메인 객체다.
+ *
+ * [왜 필요한가]
+ * - "재고가 충분한가?", "재고를 줄여도 되는가?" 같은 규칙은
+ *   DB나 Controller가 아니라 상품 자체가 판단해야 규칙 위치가 흔들리지 않는다.
+ *
+ * [흐름]
+ * - Application Service가 Product를 조회한다.
+ * - Product가 reserveStock()/releaseStock() 같은 규칙을 수행한다.
+ * - 그 결과를 Infrastructure가 DB에 반영한다.
+ *
+ * [주의할 점]
+ * - version은 낙관적 락을 위한 값이다.
+ * - version이 다르면 "누군가 먼저 수정했다"는 뜻이므로 저장 단계에서 충돌로 처리한다.
+ * - Domain은 Spring/JPA 없이 순수 자바 코드로 유지한다.
  */
 public class Product {
 
     private final Long id;
+    private final long version;
     private String name;
     private BigDecimal price;
     private int stockQuantity;
     private ProductStatus status;
 
     public Product(Long id, String name, BigDecimal price, int stockQuantity, ProductStatus status) {
+        this(id, name, price, stockQuantity, status, 0L);
+    }
+
+    public Product(Long id, String name, BigDecimal price, int stockQuantity, ProductStatus status, long version) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("id는 양수여야 합니다.");
         }
@@ -29,7 +47,11 @@ public class Product {
         if (stockQuantity < 0) {
             throw new IllegalArgumentException("stockQuantity는 0 이상이어야 합니다.");
         }
+        if (version < 0) {
+            throw new IllegalArgumentException("version은 0 이상이어야 합니다.");
+        }
         this.id = id;
+        this.version = version;
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
@@ -82,6 +104,10 @@ public class Product {
 
     public Long id() {
         return id;
+    }
+
+    public long version() {
+        return version;
     }
 
     public String name() {

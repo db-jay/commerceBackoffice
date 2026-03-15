@@ -11,6 +11,7 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND("MEMBER_NOT_FOUND", "회원을 찾을 수 없습니다."),
     ORDER_NOT_FOUND("ORDER_NOT_FOUND", "주문을 찾을 수 없습니다."),
     INSUFFICIENT_STOCK("INSUFFICIENT_STOCK", "재고가 부족합니다."),
+    PRODUCT_STOCK_CONFLICT("PRODUCT_STOCK_CONFLICT", "다른 요청이 먼저 재고를 변경했습니다. 다시 시도해주세요."),
     AUTHENTICATION_FAILED("AUTHENTICATION_FAILED", "인증에 실패했습니다."),
     INVALID_TOKEN("INVALID_TOKEN", "유효하지 않은 토큰입니다."),
     ACCESS_DENIED("ACCESS_DENIED", "접근 권한이 없습니다."),

@@ -28,7 +28,8 @@ public class JdbcCatalogProductPersistenceAdapter implements CatalogProductPersi
         rs.getString("name"),
         rs.getBigDecimal("price"),
         rs.getInt("stock_quantity"),
-        ProductStatus.valueOf(rs.getString("status"))
+        ProductStatus.valueOf(rs.getString("status")),
+        rs.getLong("version")
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -40,8 +41,8 @@ public class JdbcCatalogProductPersistenceAdapter implements CatalogProductPersi
     @Override
     public Product save(String name, BigDecimal price, int stockQuantity) {
         String sql = """
-            insert into products (name, price, stock_quantity, status)
-            values (?, ?, ?, ?)
+            insert into products (name, price, stock_quantity, status, version)
+            values (?, ?, ?, ?, ?)
             returning id
             """;
 
@@ -51,7 +52,8 @@ public class JdbcCatalogProductPersistenceAdapter implements CatalogProductPersi
             name,
             price,
             stockQuantity,
-            ProductStatus.ACTIVE.name()
+            ProductStatus.ACTIVE.name(),
+            0L
         );
 
         // returning id가 null이면 DB 응답이 비정상인 상태다.
@@ -59,13 +61,13 @@ public class JdbcCatalogProductPersistenceAdapter implements CatalogProductPersi
             throw new IllegalStateException("상품 저장 후 ID를 반환받지 못했습니다.");
         }
 
-        return new Product(id, name, price, stockQuantity, ProductStatus.ACTIVE);
+        return new Product(id, name, price, stockQuantity, ProductStatus.ACTIVE, 0L);
     }
 
     @Override
     public Optional<Product> findById(long productId) {
         String sql = """
-            select id, name, price, stock_quantity, status
+            select id, name, price, stock_quantity, status, version
             from products
             where id = ?
             """;
@@ -101,14 +103,16 @@ public class JdbcCatalogProductPersistenceAdapter implements CatalogProductPersi
     }
 
     @Override
-    public void updateStockQuantity(long productId, int stockQuantity) {
+    public boolean updateStock(Product product) {
         String sql = """
             update products
             set stock_quantity = ?,
+                version = version + 1,
                 updated_at = current_timestamp
             where id = ?
+              and version = ?
             """;
 
-        jdbcTemplate.update(sql, stockQuantity, productId);
+        return jdbcTemplate.update(sql, product.stockQuantity(), product.id(), product.version()) == 1;
     }
 }

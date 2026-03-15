@@ -22,5 +22,13 @@ public interface CatalogProductPersistencePort {
 
     void updateStatus(long productId, ProductStatus status);
 
-    void updateStockQuantity(long productId, int stockQuantity);
+    /*
+     * [역할]
+     * - 재고 변경을 DB에 반영하면서 version도 함께 확인한다.
+     *
+     * [왜 boolean을 반환하나]
+     * - rows updated = 0 이면 "상품이 없거나, version이 이미 바뀌었거나" 둘 중 하나다.
+     * - 이 프로젝트에서는 findById를 먼저 했으므로, 보통은 version 충돌로 해석한다.
+     */
+    boolean updateStock(Product product);
 }
