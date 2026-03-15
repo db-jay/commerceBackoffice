@@ -1,9 +1,23 @@
 /*
  * 공통 모듈.
- * - 여러 모듈에서 공유할 공통 타입/정책을 두는 용도
- * - 현재는 골격만 생성 (1주차 목표: 멀티모듈 구조 확정)
+ * - 여러 모듈에서 공유할 공통 타입/정책을 둔다.
+ * - 예: 공통 예외, 공통 응답 포맷, 응답 매퍼
  */
 plugins {
     id 'java-library'
+    id 'io.spring.dependency-management'
 }
 
+dependencyManagement {
+    imports {
+        // 하위 모듈이 동일한 Spring 버전 체계를 쓰도록 BOM을 고정한다.
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.4.3"
+    }
+}
+
+dependencies {
+    // ResponseEntity/HttpStatus 사용
+    implementation 'org.springframework:spring-web'
+    // @Component 사용
+    implementation 'org.springframework:spring-context'
+}
