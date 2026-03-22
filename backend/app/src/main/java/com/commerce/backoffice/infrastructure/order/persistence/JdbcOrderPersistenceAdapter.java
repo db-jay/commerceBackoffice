@@ -114,6 +114,17 @@ public class JdbcOrderPersistenceAdapter implements OrderPersistencePort {
         return Optional.of(Order.restore(row.id(), row.memberId(), orderLines, row.status()));
     }
 
+    @Override
+    public void updateStatus(long orderId, OrderStatus status) {
+        String sql = """
+            update orders
+            set order_status = ?,
+                updated_at = current_timestamp
+            where id = ?
+            """;
+        jdbcTemplate.update(sql, status.name(), orderId);
+    }
+
     private record OrderRow(
         Long id,
         Long memberId,

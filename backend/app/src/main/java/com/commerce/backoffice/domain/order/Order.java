@@ -59,6 +59,9 @@ public class Order {
         if (this.status == OrderStatus.CANCELED) {
             throw new IllegalStateException("이미 취소된 주문입니다.");
         }
+        if (this.status != OrderStatus.CREATED && this.status != OrderStatus.CONFIRMED) {
+            throw new IllegalStateException("CREATED 또는 CONFIRMED 상태에서만 취소할 수 있습니다.");
+        }
         this.status = OrderStatus.CANCELED;
     }
 

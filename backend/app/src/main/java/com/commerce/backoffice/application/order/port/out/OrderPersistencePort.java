@@ -2,6 +2,7 @@ package com.commerce.backoffice.application.order.port.out;
 
 import com.commerce.backoffice.domain.order.Order;
 import com.commerce.backoffice.domain.order.OrderLine;
+import com.commerce.backoffice.domain.order.OrderStatus;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,5 +14,6 @@ public interface OrderPersistencePort {
     Order save(Long memberId, List<OrderLine> orderLines);
 
     Optional<Order> findById(long orderId);
-}
 
+    void updateStatus(long orderId, OrderStatus status);
+}

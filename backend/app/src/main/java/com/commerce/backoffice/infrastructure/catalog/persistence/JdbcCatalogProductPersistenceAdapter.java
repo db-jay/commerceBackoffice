@@ -4,7 +4,11 @@ import com.commerce.backoffice.application.catalog.port.out.CatalogProductPersis
 import com.commerce.backoffice.domain.catalog.Product;
 import com.commerce.backoffice.domain.catalog.ProductStatus;
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -75,6 +79,26 @@ public class JdbcCatalogProductPersistenceAdapter implements CatalogProductPersi
         return jdbcTemplate.query(sql, PRODUCT_ROW_MAPPER, productId)
             .stream()
             .findFirst();
+    }
+
+    @Override
+    public Map<Long, Product> findByIds(Set<Long> productIds) {
+        if (productIds == null || productIds.isEmpty()) {
+            return Map.of();
+        }
+
+        List<Long> ids = productIds.stream().toList();
+        String placeholders = String.join(", ", java.util.Collections.nCopies(ids.size(), "?"));
+        String sql = """
+            select id, name, price, stock_quantity, status, version
+            from products
+            where id in (%s)
+            """.formatted(placeholders);
+
+        Map<Long, Product> foundProducts = new LinkedHashMap<>();
+        jdbcTemplate.query(sql, PRODUCT_ROW_MAPPER, ids.toArray())
+            .forEach(product -> foundProducts.put(product.id(), product));
+        return foundProducts;
     }
 
     @Override

@@ -57,4 +57,10 @@ public class OrderController {
         Order order = orderUseCase.getById(orderId);
         return responseMapper.ok(presentationMapper.toResponse(order));
     }
+
+    @PostMapping("/{orderId}/cancel")
+    public ResponseEntity<BaseResponse<OrderResponse>> cancel(@PathVariable long orderId) {
+        Order order = orderUseCase.cancel(orderId);
+        return responseMapper.ok(presentationMapper.toResponse(order));
+    }
 }

@@ -48,4 +48,43 @@ class OrderTest {
 
         assertThrows(IllegalStateException.class, order::confirm);
     }
+
+    @Test
+    void cancel_shouldChangeStatusFromCreatedToCanceled() {
+        Order order = Order.create(
+            1L,
+            100L,
+            List.of(TestFixtureFactory.orderLine(10L, 1, 1000))
+        );
+
+        order.cancel();
+
+        assertEquals(OrderStatus.CANCELED, order.status());
+    }
+
+    @Test
+    void cancel_shouldChangeStatusFromConfirmedToCanceled() {
+        Order order = Order.create(
+            1L,
+            100L,
+            List.of(TestFixtureFactory.orderLine(10L, 1, 1000))
+        );
+        order.confirm();
+
+        order.cancel();
+
+        assertEquals(OrderStatus.CANCELED, order.status());
+    }
+
+    @Test
+    void cancel_shouldFailWhenAlreadyCanceled() {
+        Order order = Order.create(
+            1L,
+            100L,
+            List.of(TestFixtureFactory.orderLine(10L, 1, 1000))
+        );
+        order.cancel();
+
+        assertThrows(IllegalStateException.class, order::cancel);
+    }
 }
