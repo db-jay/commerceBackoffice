@@ -3,7 +3,9 @@ package com.commerce.backoffice.application.catalog.port.out;
 import com.commerce.backoffice.domain.catalog.Product;
 import com.commerce.backoffice.domain.catalog.ProductStatus;
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /*
  * Catalog 상품 영속화(Output Port).
@@ -17,6 +19,11 @@ public interface CatalogProductPersistencePort {
     Product save(String name, BigDecimal price, int stockQuantity);
 
     Optional<Product> findById(long productId);
+
+    /*
+     * 여러 상품을 한 번에 조회해 주문 생성/취소 시 불필요한 반복 조회를 줄인다.
+     */
+    Map<Long, Product> findByIds(Set<Long> productIds);
 
     void updateBasicInfo(long productId, String name, BigDecimal price);
 

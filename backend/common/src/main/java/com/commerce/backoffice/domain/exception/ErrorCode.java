@@ -10,6 +10,7 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND("PRODUCT_NOT_FOUND", "상품을 찾을 수 없습니다."),
     MEMBER_NOT_FOUND("MEMBER_NOT_FOUND", "회원을 찾을 수 없습니다."),
     ORDER_NOT_FOUND("ORDER_NOT_FOUND", "주문을 찾을 수 없습니다."),
+    ORDER_ALREADY_CANCELED("ORDER_ALREADY_CANCELED", "이미 취소된 주문입니다."),
     INSUFFICIENT_STOCK("INSUFFICIENT_STOCK", "재고가 부족합니다."),
     PRODUCT_STOCK_CONFLICT("PRODUCT_STOCK_CONFLICT", "다른 요청이 먼저 재고를 변경했습니다. 다시 시도해주세요."),
     AUTHENTICATION_FAILED("AUTHENTICATION_FAILED", "인증에 실패했습니다."),

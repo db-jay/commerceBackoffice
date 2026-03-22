@@ -11,5 +11,6 @@ public interface OrderUseCase {
     Order create(CreateOrderCommand command);
 
     Order getById(long orderId);
-}
 
+    Order cancel(long orderId);
+}

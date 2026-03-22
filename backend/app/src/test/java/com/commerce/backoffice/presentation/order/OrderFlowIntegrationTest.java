@@ -7,9 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.commerce.backoffice.support.template.ApiIntegrationTestTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -26,6 +28,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureMockMvc
 @Testcontainers(disabledWithoutDocker = true)
 class OrderFlowIntegrationTest extends ApiIntegrationTestTemplate {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Container
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
@@ -118,6 +123,67 @@ class OrderFlowIntegrationTest extends ApiIntegrationTestTemplate {
             .andExpect(jsonPath("$.code").value("INSUFFICIENT_STOCK"));
     }
 
+    @Test
+    void cancel_shouldRestoreStockWhenOrderIsCreated() throws Exception {
+        String bearerToken = bearerToken();
+        Long memberId = createMemberAndGetId("cancel-created@test.com", "cancel-created");
+        Long productId = createProductAndGetId("cancel-created-orange", 1000, 10);
+        Long orderId = createOrderAndGetId(bearerToken, memberId, productId, 3, 1000);
+
+        mockMvc.perform(post("/api/orders/{orderId}/cancel", orderId)
+                .header("Authorization", bearerToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.code").value("SUCCESS"))
+            .andExpect(jsonPath("$.data.status").value("CANCELED"));
+
+        mockMvc.perform(get("/api/catalog/products/{productId}", productId)
+                .header("Authorization", bearerToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.stockQuantity").value(10));
+    }
+
+    @Test
+    void cancel_shouldRestoreStockWhenOrderIsConfirmed() throws Exception {
+        String bearerToken = bearerToken();
+        Long memberId = createMemberAndGetId("cancel-confirmed@test.com", "cancel-confirmed");
+        Long productId = createProductAndGetId("cancel-confirmed-orange", 1000, 10);
+        Long orderId = createOrderAndGetId(bearerToken, memberId, productId, 2, 1000);
+
+        jdbcTemplate.update(
+            "update orders set order_status = ? where id = ?",
+            "CONFIRMED",
+            orderId
+        );
+
+        mockMvc.perform(post("/api/orders/{orderId}/cancel", orderId)
+                .header("Authorization", bearerToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.code").value("SUCCESS"))
+            .andExpect(jsonPath("$.data.status").value("CANCELED"));
+
+        mockMvc.perform(get("/api/catalog/products/{productId}", productId)
+                .header("Authorization", bearerToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.stockQuantity").value(10));
+    }
+
+    @Test
+    void cancel_shouldReturnConflictWhenOrderIsAlreadyCanceled() throws Exception {
+        String bearerToken = bearerToken();
+        Long memberId = createMemberAndGetId("cancel-again@test.com", "cancel-again");
+        Long productId = createProductAndGetId("cancel-again-orange", 1000, 10);
+        Long orderId = createOrderAndGetId(bearerToken, memberId, productId, 1, 1000);
+
+        mockMvc.perform(post("/api/orders/{orderId}/cancel", orderId)
+                .header("Authorization", bearerToken))
+            .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/orders/{orderId}/cancel", orderId)
+                .header("Authorization", bearerToken))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.code").value("ORDER_ALREADY_CANCELED"));
+    }
+
     private Long createMemberAndGetId(String email, String name) throws Exception {
         return extractLongData(
             mockMvc.perform(post("/api/members")
@@ -140,6 +206,25 @@ class OrderFlowIntegrationTest extends ApiIntegrationTestTemplate {
                     .content("""
                         {"name":"%s", "price":%d, "stockQuantity":%d}
                         """.formatted(name, price, stockQuantity)))
+                .andExpect(status().isOk())
+                .andReturn(),
+            "id"
+        );
+    }
+
+    private Long createOrderAndGetId(String bearerToken, Long memberId, Long productId, int quantity, int unitPrice) throws Exception {
+        return extractLongData(
+            mockMvc.perform(post("/api/orders")
+                    .header("Authorization", bearerToken)
+                    .contentType(APPLICATION_JSON)
+                    .content("""
+                        {
+                          "memberId": %d,
+                          "orderLines": [
+                            {"productId": %d, "quantity": %d, "unitPrice": %d}
+                          ]
+                        }
+                        """.formatted(memberId, productId, quantity, unitPrice)))
                 .andExpect(status().isOk())
                 .andReturn(),
             "id"

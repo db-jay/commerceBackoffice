@@ -4,8 +4,10 @@ import com.commerce.backoffice.application.catalog.port.out.CatalogProductPersis
 import com.commerce.backoffice.domain.catalog.Product;
 import com.commerce.backoffice.domain.catalog.ProductStatus;
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,18 @@ public class InMemoryCatalogProductPersistenceAdapter implements CatalogProductP
     public Optional<Product> findById(long productId) {
         return Optional.ofNullable(products.get(productId))
             .map(this::copy);
+    }
+
+    @Override
+    public Map<Long, Product> findByIds(Set<Long> productIds) {
+        Map<Long, Product> foundProducts = new LinkedHashMap<>();
+        for (Long productId : productIds) {
+            Product product = products.get(productId);
+            if (product != null) {
+                foundProducts.put(productId, copy(product));
+            }
+        }
+        return foundProducts;
     }
 
     @Override
