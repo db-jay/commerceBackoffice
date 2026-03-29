@@ -28,4 +28,3 @@ backoffice:
       username: ${BACKOFFICE_ADMIN_USERNAME:admin}
       password: ${BACKOFFICE_ADMIN_PASSWORD:admin1234}
       role: ${BACKOFFICE_ADMIN_ROLE:ADMIN}
-

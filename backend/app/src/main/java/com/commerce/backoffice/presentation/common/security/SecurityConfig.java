@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  *   어떤 역할이 어떤 API를 호출할 수 있는지를 중앙에서 보여줘야 이해하기 쉽다.
  *
  * [핵심 정책]
- * - 공개 URL: /health, /demo/**, /api/auth/**
+ * - 공개 URL: /health, /demo/**, /api/auth/**, Swagger/OpenAPI 문서
  * - 인증 필요: /api/**
  * - 인가 정책:
  *   - 회원 변경 API(PATCH/POST): ADMIN 전용
@@ -57,7 +57,15 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/health", "/demo/**", "/actuator/health", "/api/auth/**").permitAll()
+                .requestMatchers(
+                    "/health",
+                    "/demo/**",
+                    "/actuator/health",
+                    "/api/auth/**",
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**"
+                ).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/members/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/api/members/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/catalog/**").hasAnyRole("ADMIN", "MD")
