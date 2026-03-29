@@ -22,7 +22,8 @@
 - 학습 이슈: 읽고 이해할 개념 목표
 
 2. 브랜치 생성
-- 형식: `codex/<context>-<topic>-<issueNo>`
+- 형식: `feature/{description}`
+- 예시: `feature/w5-display-event-context-32`
 
 3. 작업 수행
 - 설계 설명
