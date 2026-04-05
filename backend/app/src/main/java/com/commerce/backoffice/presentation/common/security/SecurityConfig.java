@@ -18,12 +18,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  *   어떤 역할이 어떤 API를 호출할 수 있는지를 중앙에서 보여줘야 이해하기 쉽다.
  *
  * [핵심 정책]
- * - 공개 URL: /health, /demo/**, /api/auth/**
+ * - 공개 URL: /health, /demo/**, /api/auth/**, Swagger/OpenAPI 문서
  * - 인증 필요: /api/**
  * - 인가 정책:
  *   - 회원 변경 API(PATCH/POST): ADMIN 전용
  *   - 상품 변경 API(POST/PATCH): ADMIN 또는 MD
  *   - 주문 생성 API(POST): ADMIN 또는 MD
+ *   - 배송 생성/변경 API(POST/PATCH): ADMIN 또는 MD
  *
  * [주의할 점]
  * - 인증 실패는 401, 인가 실패는 403으로 분리한다.
@@ -57,12 +58,22 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/health", "/demo/**", "/actuator/health", "/api/auth/**").permitAll()
+                .requestMatchers(
+                    "/health",
+                    "/demo/**",
+                    "/actuator/health",
+                    "/api/auth/**",
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**"
+                ).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/members/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/api/members/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/catalog/**").hasAnyRole("ADMIN", "MD")
                 .requestMatchers(HttpMethod.PATCH, "/api/catalog/**").hasAnyRole("ADMIN", "MD")
                 .requestMatchers(HttpMethod.POST, "/api/orders/**").hasAnyRole("ADMIN", "MD")
+                .requestMatchers(HttpMethod.POST, "/api/deliveries/**").hasAnyRole("ADMIN", "MD")
+                .requestMatchers(HttpMethod.PATCH, "/api/deliveries/**").hasAnyRole("ADMIN", "MD")
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
             )

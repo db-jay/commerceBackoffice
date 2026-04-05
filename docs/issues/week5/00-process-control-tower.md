@@ -8,9 +8,9 @@
 - 주간 보고/회고 링크 수집
 
 ## Checklist
-- [ ] 처리 트랙 이슈 1개가 `Done` 처리되었다.
-- [ ] 학습 트랙 이슈 1개가 `Done` 처리되었다.
-- [ ] `docs/WEEKLY_CHECKLIST.md`의 W5 항목과 결과를 대조했다.
+- [x] 처리 트랙 이슈 1개가 `Done` 처리되었다.
+- [x] 학습 트랙 이슈 1개가 `Done` 처리되었다.
+- [x] `docs/WEEKLY_CHECKLIST.md`의 W5 항목과 결과를 대조했다.
 - [ ] 주간 보고 템플릿으로 보고를 남겼다.
 - [ ] 주간 회고 5줄 링크를 연결했다.
 
@@ -18,7 +18,7 @@
 - W5 하위 이슈 2개가 모두 종료되고 증빙 링크가 본문에 정리되어 있다.
 
 ## Evidence
-- Processing Issue #:
-- Learning Issue #:
+- Processing Issue #: #33
+- Learning Issue #: #34
 - Weekly report link:
 - Retrospective link:
