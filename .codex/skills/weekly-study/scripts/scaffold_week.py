@@ -12,7 +12,7 @@ def write(path: Path, content: str) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Scaffold week issue-pack docs for commerceBackoffice")
+    parser = argparse.ArgumentParser(description="Scaffold weekly-study issue-pack docs for commerceBackoffice")
     parser.add_argument("--week", type=int, required=True)
     parser.add_argument("--slug", required=True, help="file slug, e.g. display-event-context")
     parser.add_argument("--processing-title", required=True)
@@ -84,6 +84,10 @@ def main() -> None:
     ## Scope
     - TODO: 처리 범위를 현재 주차 목표에 맞게 구체화한다.
 
+    ## Why
+    - TODO: 이 기능이 커머스 운영에서 왜 필요한지 적는다.
+    - TODO: 이 주차가 전체 로드맵/구성틀에서 어디에 놓이는지 적는다.
+
     ## Out of Scope
     - TODO: 이번 주에 하지 않을 항목을 명시한다.
 
@@ -109,6 +113,7 @@ def main() -> None:
     - 주니어가 `{args.learning_title}`를 구현 전에 설명할 수 있게 만든다.
 
     ## 숙지해야 할 내용
+    - TODO: 이 기능이 큰 커머스 구조에서 어디에 놓이는가
     - TODO: 왜 필요한가
     - TODO: 어떤 선택을 했는가
     - TODO: 장점/단점
@@ -116,10 +121,11 @@ def main() -> None:
     - TODO: 다음 단계에서 무엇이 달라지는가
 
     ## 스스로 설명해보기
+    - TODO: 구조 질문 1
     - TODO: 설명 질문 1
     - TODO: 설명 질문 2
     - TODO: 설명 질문 3
-    - TODO: 설명 질문 4
+    - TODO: 운영 질문 1
     """
 
     create_issues = textwrap.dedent(
