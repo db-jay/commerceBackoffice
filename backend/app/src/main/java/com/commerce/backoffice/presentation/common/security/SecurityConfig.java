@@ -24,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  *   - 회원 변경 API(PATCH/POST): ADMIN 전용
  *   - 상품 변경 API(POST/PATCH): ADMIN 또는 MD
  *   - 주문 생성 API(POST): ADMIN 또는 MD
+ *   - 배송 생성/변경 API(POST/PATCH): ADMIN 또는 MD
  *
  * [주의할 점]
  * - 인증 실패는 401, 인가 실패는 403으로 분리한다.
@@ -71,6 +72,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/catalog/**").hasAnyRole("ADMIN", "MD")
                 .requestMatchers(HttpMethod.PATCH, "/api/catalog/**").hasAnyRole("ADMIN", "MD")
                 .requestMatchers(HttpMethod.POST, "/api/orders/**").hasAnyRole("ADMIN", "MD")
+                .requestMatchers(HttpMethod.POST, "/api/deliveries/**").hasAnyRole("ADMIN", "MD")
+                .requestMatchers(HttpMethod.PATCH, "/api/deliveries/**").hasAnyRole("ADMIN", "MD")
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
             )
